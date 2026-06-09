@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import {
   FaUserNurse,
   FaHospital,
@@ -102,6 +103,19 @@ export default function ServiceCard() {
             </motion.div>
           ))}
         </div>
+
+
+
+                {/* See More Button */}
+        <div className="text-center mt-10">
+          <Link
+            href="/allServices"
+            className="inline-block bg-purple-700 text-white px-4 py-2 rounded-xl hover:bg-purple-400 transition duration-300"
+          >
+            See More Services
+          </Link>
+        </div>
+
       </div>
     </section>
   );

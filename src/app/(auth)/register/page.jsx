@@ -1,208 +1,268 @@
-
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-// import { authClient } from "@/lib/auth-client";
-import { Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { FaGoogle, FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
-// import { toast } from "react-toastify";
+import { FaGoogle } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
+export default function RegisterPage() {
+  const [isShowPass, setIsShowPass] = useState(false);
+  const router = useRouter();
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm();
 
-export function RegisterPage() {
-
-const [isShowPass , setIsShowPass] = useState(false)   
-const router = useRouter();
-
-// const handleRegister = async(e) =>{
-//     e.preventDefault();
-
-//     const formData  = new FormData(e.currentTarget)
-//     console.log(formData);
-
-// }
-
-
-const handleGoogleSignIn = async() =>{
-  await authClient.signIn.social({
-    provider: "google",
-    callbackURL: "/",
-  });
-
-}
-
-    const {register,
-    handleSubmit,} = useForm()
-
-    const onSubmit = async(useData) => {
-    console.log(useData);
-
-    const {email, name, image, password }= useData;
-    console.log(email , name , image, password);
-
-
-const { data, error } = await authClient.signUp.email({
-  name,
-  email,
-  password,
-  image,
-  callbackURL: "/",
-});
-
-console.log("DATA:", data);
-console.log("ERROR:", error);
-
-    if (error){
-      toast.error('error signUp ' + error.message)
-    }
-      if (data) {
-    router.push("/") 
-  }
-    if(data){
-      toast.success("Register successful");
-    }
-    else{
-      return
+  const handleGoogleSignIn = async () => {
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+      });
+    } catch (error) {
+      toast.error("Google Sign In Failed");
+      console.error(error);
     }
   };
 
+  const onSubmit = async (userData) => {
+    try {
+      const { email, name, image, password } = userData;
+
+      const { data, error } = await authClient.signUp.email({
+        name,
+        email,
+        password,
+        image,
+        callbackURL: "/",
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
+      if (data) {
+        toast.success("Registration Successful 🎉");
+        reset();
+        router.push("/");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+      console.error(err);
+    }
+  };
 
   return (
+    <section className="min-h-screen w-full max-w-2xl mx-auto bg-gradient-to-br from-purple-100 via-white to-violet-100 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-4xl mx-auto">
+        <div className="bg-white/95 backdrop-blur-lg border border-purple-100 rounded-3xl shadow-[0_20px_60px_rgba(109,40,217,0.15)]">
+          
+          <div className="w-full max-w-2xl mx-auto p-8 md:p-12">
+            
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="flex justify-center mb-4">
+                <img
+                  src="/logo.jpg"
+                  alt="Logo"
+                  className="w-20 h-20 rounded-full border-4 border-purple-200 object-cover"
+                />
+              </div>
 
-<div className="flex justify-center my-10 ">
+              <h1 className="text-4xl font-bold text-purple-800">
+                Create Account
+              </h1>
 
-<div className="flex shadow rounded-md p-10 w-full max-w-md flex-col gap-4 dark:border">
+              <p className="text-gray-500 mt-2">
+                Register to start using the platform
+              </p>
+            </div>
 
-    <Form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-
-        <div className="text-center">
-            <h2 className="text-xl font-bold ">Welcome to Our Application
-            </h2>
-            <p className="text-sm text-gray-500 ">Please Register To Use the Platform</p>
-        </div>
-
-
-                    {/* name */}
-      <TextField
-        isRequired
-        name="name"
-        type="name"
-      >
-        <Label>Name</Label>
-        <Input placeholder="Enter Your Name" 
-        {...register("name")}
-        />
-        <FieldError />
-      </TextField>
-
-
-                    {/* image url */}
-      <TextField
-        isRequired
-        name="image"
-        type="name"
-      >
-        <Label>Image URL</Label>
-        <Input placeholder="Type Here Image URL" 
-        {...register("image")}
-        />
-        <FieldError />
-      </TextField>
-                    {/* email */}
-      <TextField
-        isRequired
-        name="email"
-        type="email"
-        validate={(value) => {
-          if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-            return "Please enter a valid email address";
-          }
-
-          return null;
-        }}
-      >
-        <Label>Email</Label>
-        <Input placeholder="Enter Your Email" 
-        {...register("email")}
-        />
-        <FieldError />
-      </TextField>
-                    {/* password */}
-      <TextField
-        isRequired
-        minLength={8}
-        name="password"
-        type={isShowPass ? "text":"password"}
-        className="relative"
-        validate={(value) => {
-          if (value.length < 8) {
-            return "Password must be at least 8 characters";
-          }
-          if (!/[A-Z]/.test(value)) {
-            return "Password must contain at least one uppercase letter";
-          }
-          if (!/[0-9]/.test(value)) {
-            return "Password must contain at least one number";
-          }
-
-          return null;
-        }}
-      >
-        <Label>Password</Label>
-        <Input placeholder="Enter your password" 
-        {...register("password")}
-        />
-        <span onClick={() => setIsShowPass(!isShowPass)}
-            className="absolute right-3 top-8.5 text-gray-400"
+            {/* Form */}
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-5"
             >
-            {isShowPass? <FaRegEye /> : <FaRegEyeSlash /> }
-        </span>
-        <Description>Must be at least 8 characters with 1 uppercase and 1 number</Description>
-        <FieldError />
-      </TextField>
+              {/* Name */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Full Name
+                </label>
 
-                    {/* buttons */}
-      <div className=" ">
-        <button type="submit" className="flex items-center justify-center w-full py-2 text-[12px] border rounded-full text-green-500 border-green-500 hover:bg-green-500 hover:text-white cursor-pointer">
-          Register
-        </button>
-        
+                <input
+                  type="text"
+                  placeholder="Enter your full name"
+                  {...register("name", {
+                    required: "Name is required",
+                  })}
+                  className="w-full h-12 px-4 rounded-xl border border-purple-200 focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition"
+                />
 
-    {/* <p className=" text-gray-500 text-[12px] px-2">Already have an account? 
-        <Link href={"/signIn"} className="text-red-500">Login</Link>    
-    </p>   */}
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Image URL */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Profile Image URL
+                </label>
+
+                <input
+                  type="url"
+                  placeholder="https://example.com/photo.jpg"
+                  {...register("image", {
+                    required: "Image URL is required",
+                  })}
+                  className="w-full h-12 px-4 rounded-xl border border-purple-200 focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition"
+                />
+
+                {errors.image && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.image.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Email Address
+                </label>
+
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value:
+                        /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Enter a valid email",
+                    },
+                  })}
+                  className="w-full h-12 px-4 rounded-xl border border-purple-200 focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition"
+                />
+
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Password
+                </label>
+
+                <div className="relative">
+                  <input
+                    type={isShowPass ? "text" : "password"}
+                    placeholder="Enter password"
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 8,
+                        message:
+                          "Password must be at least 8 characters",
+                      },
+                      pattern: {
+                        value: /^(?=.*[A-Z])(?=.*\d).{8,}$/,
+                        message:
+                          "Need 1 uppercase letter and 1 number",
+                      },
+                    })}
+                    className="w-full h-12 px-4 pr-12 rounded-xl border border-purple-200 focus:border-purple-600 focus:ring-4 focus:ring-purple-100 outline-none transition"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setIsShowPass(!isShowPass)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700"
+                  >
+                    {isShowPass ? (
+                      <FaRegEye />
+                    ) : (
+                      <FaRegEyeSlash />
+                    )}
+                  </button>
+                </div>
+
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Register */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full h-12 rounded-xl bg-gradient-to-r from-purple-700 to-violet-700 text-white font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all disabled:opacity-70"
+              >
+                {isSubmitting && (
+                  <span className="loading loading-spinner loading-sm"></span>
+                )}
+
+                {isSubmitting
+                  ? "Creating Account..."
+                  : "Register"}
+              </button>
+
+              {/* Reset */}
+              <button
+                type="button"
+                onClick={() => reset()}
+                className="w-full h-12 rounded-xl border border-purple-700 text-purple-700 font-medium hover:bg-purple-700 hover:text-white transition-all"
+              >
+                Reset
+              </button>
+            </form>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 my-6">
+              <div className="flex-grow h-px bg-gray-300"></div>
+              <span className="text-sm text-gray-400">OR</span>
+              <div className="flex-grow h-px bg-gray-300"></div>
+            </div>
+
+            {/* Google */}
+            <button
+              onClick={handleGoogleSignIn}
+              className="w-full h-12 flex items-center justify-center gap-3 rounded-xl border border-purple-200 hover:bg-purple-50 transition-all"
+            >
+              <FaGoogle className="text-red-500 text-lg" />
+              Continue with Google
+            </button>
+
+            {/* Login */}
+            <p className="text-center text-sm text-gray-500 mt-6">
+              Already have an account?
+              <Link
+                href="/login"
+                className="ml-2 text-purple-700 font-semibold hover:underline"
+              >
+                Login
+              </Link>
+            </p>
+
+          </div>
+        </div>
       </div>
-
-
-    </Form> 
-
-    <div className="flex items-center gap-3">
-      <div className="flex-grow h-px bg-gray-400"></div>
-        <p className="text-gray-400 flex ">or</p>
-      <div className="flex-grow h-px bg-gray-400"></div>  
-    </div>
-
-                        {/* google btn */}
-    <div className="flex items-center">
-    <button type="button" className="w-full gap-1 flex items-center justify-center text-[12px]  border py-2 px-0 rounded-full text-green-500 border-green-500 hover:bg-green-500 hover:text-white cursor-pointer"
-    onClick={handleGoogleSignIn}
-    >
-        <FaGoogle></FaGoogle>
-          Continue with Google
-    </button>
-    </div>
-
-    <p className="flex justify-center text-gray-500 text-[12px] px-2">Already have an account? 
-        <Link href={"/signIn"} className="text-red-500">Login</Link>    
-    </p>    
-</div>
-
-    </div>    
+    </section>
   );
 }
-export default RegisterPage;

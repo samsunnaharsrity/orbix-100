@@ -53,8 +53,8 @@ const services = [
 
 export default function AllServicesPage() {
   return (
-    <section className="py-24 bg-gradient-to-b from-purple-50 to-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="py-10 bg-gradient-to-b from-purple-50 to-white min-h-screen">
+      <div className="max-w-5xl mx-auto px-4">
 
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-purple-800">
