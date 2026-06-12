@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { GraduationCap, Laptop, Wrench, Users } from "lucide-react";
+import Link from "next/link";
 
 const courses = [
   {
@@ -122,9 +123,12 @@ export default function TVETTrainingPage() {
           Join our TVET training programs and build your future career.
         </p>
 
+
+        <Link href="/contact">
         <button className="mt-6 px-6 py-3 bg-white text-purple-700 font-semibold rounded-xl hover:scale-105 transition">
           Contact Us
         </button>
+        </Link>
       </section>
 
     </main>
