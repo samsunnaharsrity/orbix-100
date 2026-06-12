@@ -1,11 +1,10 @@
 import Navbar from "@/components/navbar";
 import "./globals.css";
 import Footer from "@/components/Footer";
-import TopHeader from "@/components/top-header";
 
 
 export const metadata = {
-  title: "Oribiom Caregiving Service",
+  title: "Oribix Caregiving Service",
   description:
     "Professional Caregiving, Training, Consultancy & Manpower Support",
 };

@@ -1,60 +1,22 @@
-"use client";
+import Link from "next/link";
 
-import { motion } from "framer-motion";
-import {
-  FaUserNurse,
-  FaHospital,
-  FaHeartbeat,
-  FaWheelchair,
-} from "react-icons/fa";
+async function getServices() {
+  const res = await fetch(
+    process.env.BETTER_AUTH_URL + "/api/services",
+    {
+      cache: "no-store",
+    }
+  );
 
-const services = [
-  {
-    title: "কেয়ারগিভার হোম সার্ভিস",
-    description: "অভিজ্ঞ কেয়ারগিভার দ্বারা বাসায় রোগী ও বয়স্কদের সার্বক্ষণিক সেবা প্রদান।",
-    icon: <FaUserNurse />,
-  },
-  {
-    title: "নার্সিং সার্ভিস",
-    description: "দক্ষ ও প্রশিক্ষিত নার্সের মাধ্যমে নিরাপদ ও পেশাদার স্বাস্থ্যসেবা।",
-    icon: <FaHospital />,
-  },
-  {
-    title: "ফিজিওথেরাপি",
-    description: "ব্যথা উপশম ও শারীরিক সক্ষমতা বৃদ্ধির জন্য আধুনিক ফিজিওথেরাপি।",
-    icon: <FaHeartbeat />,
-  },
-  {
-    title: "বয়স্ক সাপোর্ট",
-    description: "বয়স্ক ব্যক্তিদের জন্য বিশেষ যত্ন ও দৈনন্দিন সহায়তা।",
-    icon: <FaWheelchair />,
-  },
-  {
-    title: "ডাক্তার ভিজিট",
-    description: "অভিজ্ঞ চিকিৎসকের হোম ভিজিট সেবা।",
-    icon: <FaHospital />,
-  },
-  {
-    title: "মেডিকেল এটেনডেন্ট",
-    description: "রোগীর সার্বক্ষণিক তত্ত্বাবধান ও সহায়তা।",
-    icon: <FaUserNurse />,
-  },
-  {
-    title: "পোস্ট অপারেটিভ কেয়ার",
-    description: "অপারেশনের পর বিশেষায়িত পরিচর্যা।",
-    icon: <FaHeartbeat />,
-  },
-  {
-    title: "আইসিইউ সেটআপ সাপোর্ট",
-    description: "বাড়িতে ICU পরিবেশ তৈরিতে সহায়তা।",
-    icon: <FaHospital />,
-  },
-];
+  return res.json();
+}
 
-export default function AllServicesPage() {
+export default async function AllServicesPage() {
+  const services = await getServices();
+
   return (
-    <section className="py-10 bg-gradient-to-b from-purple-50 to-white min-h-screen">
-      <div className="max-w-5xl mx-auto px-4">
+    <section className="py-16">
+      <div className="max-w-6xl mx-auto px-4">
 
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-purple-800">
@@ -68,30 +30,34 @@ export default function AllServicesPage() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {services.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -8 }}
-              transition={{ duration: 0.4 }}
-              className="bg-white rounded-3xl shadow-lg p-8 border border-purple-100"
+          {services.map((service) => (
+            <div
+              key={service._id}
+              className="bg-white p-6 rounded-3xl shadow-lg"
             >
-              <div className="w-20 h-20 mx-auto bg-purple-100 rounded-2xl flex items-center justify-center text-4xl text-purple-700">
-                {item.icon}
-              </div>
+              <img
+                src={service.image}
+                alt={service.title}
+                className="h-52 w-full object-cover rounded-2xl"
+              />
 
-              <h3 className="mt-6 text-center font-bold text-xl">
-                {item.title}
-              </h3>
+              <h2 className="mt-4 text-xl font-bold">
+                {service.title}
+              </h2>
 
-              <p className="mt-4 text-center text-gray-600">
-                {item.description}
+              <p className="mt-3 text-gray-600">
+                {service.description}
               </p>
-            </motion.div>
+
+              <Link
+                href={`/services/${service._id}`}
+                className="mt-5 inline-block bg-purple-700 text-white px-5 py-2 rounded-xl"
+              >
+                বিস্তারিত দেখুন
+              </Link>
+            </div>
           ))}
         </div>
-
       </div>
     </section>
   );

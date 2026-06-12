@@ -1,9 +1,10 @@
 import Hero from "@/components/Hero";
-import Pricing from "@/components/PricingCard";
 import ServiceCard from "@/components/ServiceCard";
 import About from "./about/page";
 import Stats from "@/components/stats";
 import Testimonials from "@/components/testimonials";
+import CaregiverPackages from "./caregiver-packages/page";
+import Leadership from "@/components/leadership";
 
 export default function Home() {
   return (
@@ -12,33 +13,11 @@ export default function Home() {
       <Hero></Hero>
       <About></About>
       <ServiceCard></ServiceCard>
-      <Pricing></Pricing>
+      <CaregiverPackages></CaregiverPackages>
+      {/* <PricingCard></PricingCard> */}
+      <Leadership></Leadership>
       <Stats></Stats>
       <Testimonials></Testimonials>
-
-      {/* leadeship */}
-
-      {/* <Navbar />
-
-      <Hero />
-
-      <AboutPreview />
-
-      <Services />
-
-      <Stats />
-
-      <WhyChooseUs />
-
-      <Pricing />
-
-      <Testimonials />
-
-      <CTA />
-
-      <ContactSection />
-
-      <Footer /> */}
     </div>
   );
 }
