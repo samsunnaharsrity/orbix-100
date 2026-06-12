@@ -233,7 +233,7 @@ export default function Footer() {
 
       {/* Bottom Footer */}
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 text-xs text-white/35 sm:flex-row">
-        <span>© 2026 ORBIX CARE. All rights reserved.</span>
+        <span>© 2026 Samsun Nahar. All rights reserved.</span>
 
         <div className="flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-500/10 px-3 py-1">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
