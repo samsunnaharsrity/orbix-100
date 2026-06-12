@@ -15,12 +15,12 @@ export default function Leadership() {
 
           <MessageCard
             data={mdMessage}
-            img="/md.jpg"
+            img="/logo.jpg"
           />
 
           <MessageCard
             data={directorMessage}
-            img="/director.jpg"
+            img="/logo.jpg"
           />
 
         </div>
