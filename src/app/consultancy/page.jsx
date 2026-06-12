@@ -9,4 +9,4 @@ const ConsultancyPage = () => {
     );
 }
 
-export default Page;
+export default ConsultancyPage;

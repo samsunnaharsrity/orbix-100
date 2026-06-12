@@ -1,67 +1,98 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 
-export default function Testimonials({ reviews }) {
+export default function Testimonials() {
+  const [reviews, setReviews] = useState([]);
+  const [index, setIndex] = useState(0);
+
+  // fetch data
+  useEffect(() => {
+    fetch("/api/reviews")
+      .then((res) => res.json())
+      .then(setReviews);
+  }, []);
+
+  // auto slider
+  useEffect(() => {
+    if (!reviews.length) return;
+
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % reviews.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [reviews]);
+
+  const review = reviews[index];
+
+  if (!review) {
+    return (
+      <div className="py-20 text-center text-gray-500">
+        Loading reviews...
+      </div>
+    );
+  }
+
   return (
     <section className="bg-gradient-to-b from-white to-purple-50 py-20">
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="text-center">
+      <div className="mx-auto max-w-4xl px-4 text-center">
 
-          <h2 className="mt-3 text-3xl font-bold text-purple-900 md:text-4xl">
-            গ্রাহকদের মতামত
-          </h2>
+        <h2 className="text-3xl font-bold text-purple-900 md:text-4xl">
+          গ্রাহকদের মতামত
+        </h2>
 
-          <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-            আমাদের সম্মানিত গ্রাহকদের বাস্তব অভিজ্ঞতা।
+        <p className="mt-3 text-gray-600">
+          আমাদের সম্মানিত গ্রাহকদের বাস্তব অভিজ্ঞতা
+        </p>
+
+        {/* CARD */}
+        <motion.div
+          key={review._id}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mt-12 rounded-3xl bg-white p-8 shadow-xl border border-purple-100"
+        >
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 text-purple-700">
+            <Quote size={22} />
+          </div>
+
+          {/* STARS */}
+          <div className="mt-5 flex justify-center gap-1 text-yellow-500">
+            {[...Array(review.rating || 5)].map((_, i) => (
+              <Star key={i} size={18} fill="currentColor" />
+            ))}
+          </div>
+
+          {/* MESSAGE */}
+          <p className="mt-6 text-gray-600 leading-7">
+            {review.message}
           </p>
-        </div>
 
-        <div className="mt-14 grid gap-8 md:grid-cols-3">
-          {reviews?.map((review, index) => (
-            <motion.div
-              key={review._id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.1,
-              }}
-              whileHover={{
-                y: -8,
-              }}
-              className="rounded-3xl border border-purple-100 bg-white p-7 shadow-lg"
-            >
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 text-purple-700">
-                <Quote size={22} />
-              </div>
+          {/* USER */}
+          <div className="mt-6 border-t pt-4">
+            <h4 className="font-semibold text-purple-900">
+              {review.name}
+            </h4>
+            <p className="text-sm text-gray-500">
+              {review.location}
+            </p>
+          </div>
+        </motion.div>
 
-              <div className="mb-4 flex gap-1 text-yellow-500">
-                {[...Array(review.rating || 5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={16}
-                    fill="currentColor"
-                  />
-                ))}
-              </div>
-
-              <p className="leading-7 text-gray-600">
-                {review.message}
-              </p>
-
-              <div className="mt-6 border-t border-purple-100 pt-4">
-                <h4 className="font-semibold text-purple-900">
-                  {review.name}
-                </h4>
-
-                <p className="text-sm text-gray-500">
-                  {review.location}
-                </p>
-              </div>
-            </motion.div>
+        {/* DOTS */}
+        <div className="mt-6 flex justify-center gap-2">
+          {reviews.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className={`h-2 w-2 rounded-full transition ${
+                i === index ? "bg-purple-700 w-4" : "bg-purple-300"
+              }`}
+            />
           ))}
         </div>
       </div>
