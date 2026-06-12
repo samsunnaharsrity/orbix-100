@@ -1,14 +1,16 @@
 import Link from "next/link";
 
 async function getServices() {
-  const res = await fetch(
-    `${process.env.BETTER_AUTH_URL}/api/services`,
-    {
-      cache: "no-store",
-    }
-  );
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || process.env.BETTER_AUTH_URL;
+    const res = await fetch(`${baseUrl}/api/services`, { cache: "no-store" });
 
-  return res.json();
+    if (!res.ok) return []; // ✅ error হলে empty array
+
+    return res.json();
+  } catch {
+    return []; // ✅ crash এর বদলে empty array
+  }
 }
 
 export default async function ServiceCard() {

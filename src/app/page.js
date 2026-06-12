@@ -12,12 +12,12 @@ export default function Home() {
 
       <Hero></Hero>
       <About></About>
-      {/* <ServiceCard></ServiceCard> */}
+      <ServiceCard></ServiceCard>
       <CaregiverPackages></CaregiverPackages>
       {/* <PricingCard></PricingCard> */}
       <Leadership></Leadership>
       <Stats></Stats>
-      {/* <Testimonials></Testimonials> */}
+      <Testimonials></Testimonials>
     </div>
   );
 }

@@ -9,11 +9,17 @@ export default function Testimonials() {
   const [index, setIndex] = useState(0);
 
   // fetch data
-  useEffect(() => {
-    fetch("/api/reviews")
-      .then((res) => res.json())
-      .then(setReviews);
-  }, []);
+useEffect(() => {
+  fetch("/api/reviews")
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    })
+    .then((data) => {
+      if (Array.isArray(data)) setReviews(data); // ✅ array নিশ্চিত করো
+    })
+    .catch((err) => console.error("Reviews fetch error:", err));
+}, []);
 
   // auto slider
   useEffect(() => {
